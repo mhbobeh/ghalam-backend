@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets, generics, permissions, views, status, filters
-from api.models import CustomUser, Post
+from api.models import CustomUser, Post, PostLike
 from api.serializers import (ProfileSerializer,
                              UserSerializer,
                              RegisterSerializer,
@@ -134,3 +134,36 @@ class PostView(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+
+
+class PostLikeView(views.APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        post = Post.objects.filter(slug=kwargs["slug"])
+        post_like = PostLike.objects.filter(user_id=user.id, post_id=post.first().id)
+
+        if post.exists():
+            if not post_like.exists():
+                PostLike.objects.create(user=user, post=post.first())
+                return Response(status=status.HTTP_201_CREATED)
+
+            return Response(status=status.HTTP_409_CONFLICT, data={"detail": _("you've already liked this photo")})
+
+        return Response(status=status.HTTP_404_NOT_FOUND, data={"detail": _("No Post Found")})
+
+    def delete(self, request, *args, **kwargs):
+        user = request.user
+        post = Post.objects.filter(slug=kwargs["slug"])
+        post_like = PostLike.objects.filter(user_id=user.id, post_id=post.first().id)
+
+        if post.exists():
+            if post_like.exists():
+                post_like.first().delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+
+            return Response(status=status.HTTP_409_CONFLICT, data={"detail": _("you haven't liked this photo")})
+
+        return Response(status=status.HTTP_404_NOT_FOUND, data={"detail": _("No Post Found")})

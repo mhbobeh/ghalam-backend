@@ -6,7 +6,8 @@ from api.views import (ProfileView,
                        VerifyOTPView,
                        ForgetPasswordView,
                        ChangePasswordView,
-                       PostView
+                       PostView,
+                       PostLikeView
                        )
 from rest_framework.routers import DefaultRouter
 
@@ -26,4 +27,5 @@ urlpatterns = [
     path('verify-otp/', VerifyOTPView.as_view(), name='verify_otp'),
     path('forget-password/', ForgetPasswordView.as_view(), name='forget_password'),
     path('reset-password/', ChangePasswordView.as_view(), name='reset_password'),
+    path('post/<slug:slug>/like/', PostLikeView.as_view(), name='post_like'),
 ] + router.urls 
