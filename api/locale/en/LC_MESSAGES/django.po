@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 11:41+0000\n"
+"POT-Creation-Date: 2022-08-15 18:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,76 +15,76 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: api/models.py:40
+#: api/models.py:41
 msgid "social"
-msgstr "احتماعی"
+msgstr ""
 
-#: api/models.py:40
+#: api/models.py:41
 msgid "economy"
-msgstr "اقتصاد"
+msgstr ""
 
-#: api/models.py:40
+#: api/models.py:41
 msgid "politic"
-msgstr "سیاست"
+msgstr ""
 
-#: api/models.py:41
+#: api/models.py:42
 msgid "sport"
-msgstr "ورزش"
+msgstr ""
 
-#: api/models.py:41
+#: api/models.py:42
 msgid "comedy"
-msgstr "ظنز"
+msgstr ""
 
-#: api/models.py:41
+#: api/models.py:42
 msgid "other"
-msgstr "متفرقه"
+msgstr ""
 
-#: api/serializers.py:11
+#: api/serializers.py:41
 msgid "phone number must starts with '09' and contians 11 digits."
-msgstr "شماره تلفن میبایست با ۰۹ آغاز شود و دقیقا ۱۱ رقم باشد."
+msgstr ""
 
-#: api/serializers.py:20
+#: api/serializers.py:50
 msgid "passwords does not match"
-msgstr "پسورد و تکرار آن باید یکسان باشند"
+msgstr ""
 
-#: api/views.py:32
+#: api/views.py:48
 msgid "user created successfully"
-msgstr "کاربر با موفقیت ساخته شد"
+msgstr ""
 
-#: api/views.py:58
+#: api/views.py:75
 msgid "recovery_code"
-msgstr "کد بازیابی"
+msgstr ""
 
-#: api/views.py:60 api/views.py:79
+#: api/views.py:77 api/views.py:96
 msgid "wrong phone number or OTP"
-msgstr "شماره تلفن یا کد وارد شده نامعتبر است"
+msgstr ""
 
-#: api/views.py:95
+#: api/views.py:112
 msgid "password reset successfully."
-msgstr "پسورد با موفقیت تغییر کرد"
+msgstr ""
 
-#: api/views.py:98
+#: api/views.py:115
 msgid "check if you entered current password correctly."
-msgstr "لطفا پسورد خود را چک کنید"
+msgstr ""
 
-#: api/views.py:135
+#: api/views.py:153
 msgid "you've already liked this photo"
-msgstr "شما قبلا این پست را لایک کرده اید."
+msgstr ""
 
-#: api/views.py:137 api/views.py:151
+#: api/views.py:155 api/views.py:169
 msgid "No Post Found"
-msgstr "چنین پستی وجود ندارد."
+msgstr ""
 
-#: api/views.py:149
+#: api/views.py:167
 msgid "you haven't liked this photo"
-msgstr "شما تا کنون این پست را لایک نکرده اید."
+msgstr ""
 
-#: ghalam/settings.py:156
+#: ghalam/settings.py:140
 msgid "Farsi"
-msgstr "فارسی"
+msgstr ""
 
-#: ghalam/settings.py:157
+#: ghalam/settings.py:141
 msgid "English"
-msgstr "انگلیسی"
+msgstr ""
