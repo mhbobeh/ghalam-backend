@@ -83,3 +83,9 @@ class ForgetPasswordSerializer(SamePassSerializer, ValidPhoneSerializer):
     password = serializers.CharField(max_length=128)
     password_repeat = serializers.CharField(max_length=128)
     recovery_code = serializers.CharField()
+
+
+class ChangePasswordSerializer(SamePassSerializer, serializers.Serializer):
+    current_password = serializers.CharField(max_length=128)
+    password = serializers.CharField(max_length=128)
+    password_repeat = serializers.CharField(max_length=128)

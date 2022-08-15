@@ -7,6 +7,7 @@ from api.serializers import (ProfileSerializer,
                              SendOTPSerializer,
                              VerifyOTPSerializer,
                              ForgetPasswordSerializer,
+                             ChangePasswordSerializer,
                              
 )
 from django.shortcuts import get_object_or_404
@@ -16,6 +17,7 @@ from django.utils.translation import gettext_lazy as _
 from api.tasks import send_otp
 from api.services import OTPManager, UUIDManager
 from django.contrib.auth import get_user_model
+from rest_framework.permissions import IsAuthenticated
 
 
 
@@ -89,3 +91,23 @@ class ForgetPasswordView(views.APIView):
             return Response(status=status.HTTP_200_OK)
 
         return Response(data={'detail': _('wrong phone number or OTP')}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class ChangePasswordView(views.APIView):
+
+    permission_classes =(IsAuthenticated, )
+
+    @swagger_auto_schema(request_body=ChangePasswordSerializer)
+    def post(self, request):
+        serializer = ChangePasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        if self.request.user.check_password(data['current_password']):
+            self.request.user.set_password(data['password'])
+            self.request.user.save()
+            data = {'detail': _('password reset successfully.')}
+            return Response(data=data, status=status.HTTP_200_OK)
+
+        data = {'detail': _('check if you entered current password correctly.')}
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)

@@ -4,7 +4,8 @@ from api.views import (ProfileView,
                        RegisterView,
                        SendOTPView,
                        VerifyOTPView,
-                       ForgetPasswordView
+                       ForgetPasswordView,
+                       ChangePasswordView,
                        )
 from rest_framework.routers import DefaultRouter
 
@@ -22,4 +23,5 @@ urlpatterns = [
     path('send-otp/', SendOTPView.as_view(), name='send_otp'),
     path('verify-otp/', VerifyOTPView.as_view(), name='verify_otp'),
     path('forget-password/', ForgetPasswordView.as_view(), name='forget_password'),
+    path('reset-password/', ChangePasswordView.as_view(), name='reset_password'),
 ] + router.urls 
