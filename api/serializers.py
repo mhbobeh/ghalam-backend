@@ -116,3 +116,7 @@ class PostSerializer(serializers.ModelSerializer):
             'updated_at',
             'author'     
             )
+
+
+class FavouriteCategorySerializer(serializers.Serializer):
+    category = serializers.ChoiceField(choices=Post.TYPE_CHOICES)

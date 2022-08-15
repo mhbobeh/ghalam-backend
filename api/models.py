@@ -100,3 +100,19 @@ class PostLike(models.Model):
         on_delete=models.CASCADE,
         related_name='likes'
         )
+
+
+class FavouriteCategory(models.Model):
+
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='favourites'
+        )
+
+    category = models.CharField(
+        max_length=200,
+        choices=Post.TYPE_CHOICES,
+        null=True,
+        blank=True
+        )

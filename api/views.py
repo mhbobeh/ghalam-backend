@@ -9,8 +9,8 @@ from api.serializers import (ProfileSerializer,
                              ForgetPasswordSerializer,
                              ChangePasswordSerializer,
                              PostSerializer,
-                             
-)
+                             FavouriteCategorySerializer
+                             )
 from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
@@ -167,3 +167,41 @@ class PostLikeView(views.APIView):
             return Response(status=status.HTTP_409_CONFLICT, data={"detail": _("you haven't liked this photo")})
 
         return Response(status=status.HTTP_404_NOT_FOUND, data={"detail": _("No Post Found")})
+
+
+class FavouriteCategory(views.APIView):
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        serializer = FavouriteCategorySerializer
+        serializer.is_valid(raise_exception=True)
+
+
+        data = {
+            "user": user,
+            "category": serializer.validated_data["category"]
+        }
+        favorite_category = FavouriteCategory.objects.filter(**data)
+
+        if not favorite_category.exists():
+            FavouriteCategory.objects.create(**data)
+            return Response(status=status.HTTP_201_CREATED)
+
+        return Response(status=status.HTTP_409_CONFLICT, data={"detail": _("you've already selected this category")})
+
+    def delete(self, request, *args, **kwargs):
+        user = request.user
+        serializer = FavouriteCategorySerializer
+        serializer.is_valid(raise_exception=True)
+
+        data = {
+            "user": user,
+            "category": serializer.validated_data["category"]
+        }
+        favorite_category = FavouriteCategory.objects.filter(**data)
+
+        if favorite_category.exists():
+            favorite_category.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return Response(status=status.HTTP_409_CONFLICT, data={"detail": _("you haven't selected this category before")})
