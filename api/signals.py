@@ -1,12 +1,20 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save, pre_delete
 from django.dispatch import receiver
-from api.models import Post, CustomUser
+from api.models import Post, CustomUser, PostLike
 from api.tasks import send_mass_email
 from django.urls import reverse
 
 
+@receiver(pre_save, sender=PostLike)
+def increase_like(sender, instance, *args, **kwargs):
+    instance.post.likes_count = instance.post.likes_count + 1
+    instance.post.save()
+        
 
-
+@receiver(pre_delete, sender=PostLike)
+def decrease_like(sender, instance, *args, **kwargs):
+    instance.post.likes_count = instance.post.likes_count - 1
+    instance.post.save()
 
 
 @receiver(post_save, sender=Post)
