@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from rest_framework import viewsets, generics, permissions, views, status
-from api.models import CustomUser
+from rest_framework import viewsets, generics, permissions, views, status, filters
+from api.models import CustomUser, Post
 from api.serializers import (ProfileSerializer,
                              UserSerializer,
                              RegisterSerializer,
@@ -8,6 +8,7 @@ from api.serializers import (ProfileSerializer,
                              VerifyOTPSerializer,
                              ForgetPasswordSerializer,
                              ChangePasswordSerializer,
+                             PostSerializer,
                              
 )
 from django.shortcuts import get_object_or_404
@@ -18,6 +19,8 @@ from api.tasks import send_otp
 from api.services import OTPManager, UUIDManager
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import IsAuthenticated
+from api.permissions import IsOwnerOrReadOnly
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 
@@ -111,3 +114,23 @@ class ChangePasswordView(views.APIView):
 
         data = {'detail': _('check if you entered current password correctly.')}
         return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class PostView(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = (IsOwnerOrReadOnly, )
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    filterset_fields = ['category', ]
+    ordering_fields = ['likes_count', 'views_count', 'created_at']
+    search_fields = ['title', 'text', 'author__full_name']
+    lookup_field = "slug"
+
+    def retrieve(self, request, *args, **kwargs):
+        post = self.get_object()
+        post.views_count = post.views_count + 1
+        post.save(update_fields=('views_count',))
+        return super().retrieve(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)

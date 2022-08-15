@@ -6,6 +6,7 @@ from api.views import (ProfileView,
                        VerifyOTPView,
                        ForgetPasswordView,
                        ChangePasswordView,
+                       PostView
                        )
 from rest_framework.routers import DefaultRouter
 
@@ -14,6 +15,7 @@ router = DefaultRouter()
 
 
 router.register(r'user', UserView, basename='user')
+router.register(r'post', PostView, basename='post')
 
 app_name = 'api'
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import CustomUser
+from api.models import CustomUser, Post
 from django.utils.translation import gettext_lazy as _
 
 
@@ -89,3 +89,30 @@ class ChangePasswordSerializer(SamePassSerializer, serializers.Serializer):
     current_password = serializers.CharField(max_length=128)
     password = serializers.CharField(max_length=128)
     password_repeat = serializers.CharField(max_length=128)
+
+
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = (
+            'title',
+            'slug',
+            'text',
+            'category',
+            'image',
+            'video',
+            'likes_count',
+            'views_count',
+            'created_at',
+            'updated_at',
+            'author'
+        )
+        read_only_fields = (
+            'id',
+            'slug',
+            'likes_count',
+            'views_count',
+            'created_at',
+            'updated_at',
+            'author'     
+            )
