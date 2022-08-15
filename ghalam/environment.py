@@ -1,0 +1,12 @@
+from os import getenv
+
+REDIS_HOST = getenv('REDIS_HOST', 'redis')
+REDIS_PORT = getenv('REDIS_PORT', '6379')
+
+# redis db's
+REDIS_BROKER = 0
+REDIS_DEFAULT_CACHE = 1
+REDIS_OTP_CACHE = 2
+REDIS_UUID_CACHE = 3
+
+OTP_EXPIRE_TIME = 180

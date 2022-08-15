@@ -1,6 +1,7 @@
 from pathlib import Path
 from datetime import timedelta
 from django.utils.translation import gettext_lazy as _
+from ghalam import environments
 
 
 
@@ -147,3 +148,27 @@ USE_I18N = True
 LOCALE_PATHS = (
     '/home/amir/projects/Ghalam/api/locale',
 )
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{environments.REDIS_HOST}:{environments.REDIS_PORT}/{environments.REDIS_DEFAULT_CACHE}",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
+    "password_otp": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{environments.REDIS_HOST}:{environments.REDIS_PORT}/{environments.REDIS_OTP_CACHE}",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
+    "password_uuid": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{environments.REDIS_HOST}:{environments.REDIS_PORT}/{environments.REDIS_UUID_CACHE}",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
+}
