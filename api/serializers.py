@@ -67,3 +67,19 @@ class RegisterSerializer(SamePassSerializer, ValidPhoneSerializer, serializers.M
             'password': {'write_only': True},
             'password_repeat': {'write_only': True},
         }
+
+
+class SendOTPSerializer(ValidPhoneSerializer):
+    phone_number = serializers.CharField()
+
+
+class VerifyOTPSerializer(ValidPhoneSerializer):
+    phone_number = serializers.CharField()
+    otp = serializers.CharField(max_length=6)
+
+
+class ForgetPasswordSerializer(SamePassSerializer, ValidPhoneSerializer):
+    phone_number = serializers.CharField()
+    password = serializers.CharField(max_length=128)
+    password_repeat = serializers.CharField(max_length=128)
+    recovery_code = serializers.CharField()

@@ -4,11 +4,18 @@ from api.models import CustomUser
 from api.serializers import (ProfileSerializer,
                              UserSerializer,
                              RegisterSerializer,
+                             SendOTPSerializer,
+                             VerifyOTPSerializer,
+                             ForgetPasswordSerializer,
+                             
 )
 from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
 from django.utils.translation import gettext_lazy as _
+from api.tasks import send_otp
+from api.services import OTPManager, UUIDManager
+from django.contrib.auth import get_user_model
 
 
 
@@ -34,3 +41,51 @@ class RegisterView(views.APIView):
         serializer.is_valid(raise_exception=True)
         CustomUser.objects.create_user(**serializer.validated_data)
         return Response(data={'data':_('user created successfully')}, status=status.HTTP_200_OK)
+
+
+
+class SendOTPView(views.APIView):
+
+    @swagger_auto_schema(request_body=SendOTPSerializer)    
+    def post(self, request):
+        serializer = SendOTPSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer._validated_data
+        send_otp(data['phone_number'])
+        return Response(status=status.HTTP_200_OK)
+
+
+class VerifyOTPView(views.APIView):
+
+    @swagger_auto_schema(request_body=VerifyOTPSerializer)
+    def post(self, request):
+        serializer = VerifyOTPSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        otp = OTPManager(data['phone_number'])
+        if otp.is_valid(data['otp']):
+            uuid = UUIDManager(data['phone_number'])
+            uuid.generate_save()
+            return Response(data={'data': _({'recovery_code': uuid.value})}, status=status.HTTP_200_OK)
+
+        return Response(data={'detail': _('wrong phone number or OTP')}, status=status.HTTP_401_UNAUTHORIZED)                                                                                                                                                    
+ 
+
+class ForgetPasswordView(views.APIView):
+
+    @swagger_auto_schema(request_body=ForgetPasswordSerializer)
+    def post(self, request):
+        serializer = ForgetPasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        User = get_user_model()
+        uuid = UUIDManager(data['phone_number'])
+        if uuid.is_valid(data['tracking_code']):
+            user = get_object_or_404(User, phone_number=data['phone_number'])
+            user.set_password(data['password'])
+            user.save()
+            return Response(status=status.HTTP_200_OK)
+
+        return Response(data={'detail': _('wrong phone number or OTP')}, status=status.HTTP_401_UNAUTHORIZED)
